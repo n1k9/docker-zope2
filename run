@@ -1,6 +1,15 @@
 #!/bin/bash
 
 ZOPE_HOME="/zope"
+USERNAME=zope
+GROUPNAME=zope
+
+USERID=$(stat -c '%u' $ZOPE_HOME)
+GROUPID=$(stat -c '%g' $ZOPE_HOME)
+
+groupadd -r $USERNAME -g $GROUPID
+useradd -r -g $GROUPNAME -u $USERID $USERNAME
+
 INSTANCE_HOME="$ZOPE_HOME/instance"
 ZOPEBIN="/src/Zope/bin"
 PYTHON="$ZOPEBIN/zopepy"
@@ -10,10 +19,8 @@ export INSTANCE_HOME
 export PYTHON
 
 if [ ! -d "$INSTANCE_HOME/etc" ]; then
-  $ZOPEBIN/mkzopeinstance -u zope:2epoz -d $INSTANCE_HOME
-  cp /src/zope.conf $INSTANCE_HOME/etc/
-  chown -R zope:zope $ZOPE_HOME
+  sudo -u zope -g zope $ZOPEBIN/mkzopeinstance -u zope:2epoz -d $INSTANCE_HOME
+  sudo -u zope -g zope cp /src/zope.conf $INSTANCE_HOME/etc/
 fi
 
 exec $ZOPEBIN/zopectl -C "$CONFIG_FILE" fg
-
