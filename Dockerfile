@@ -31,11 +31,14 @@ ENV ZOPEVER 2.13.24
 RUN curl -sSL https://github.com/zopefoundation/Zope/archive/$ZOPEVER.tar.gz \
     | tar xzC /src \
     && mv /src/Zope-$ZOPEVER /src/Zope
+RUN echo "[backup]\nrecipe = collective.recipe.backup\nbackup_blobs = false\n" >> /src/Zope/buildout.cfg
+RUN echo "[repozo]\nrecipe = zc.recipe.egg\neggs = ZODB3\nscripts = repozo\n" >> /src/Zope/buildout.cfg
 RUN cd /src/Zope \
     && python bootstrap.py \
-    && python bin/buildout \
-    && python setup.py install \
-    && rm -rf /src/
+    && python bin/buildout
+
+RUN cd /src/Zope && python bin/buildout install repozo
+RUN cd /src/Zope && python bin/buildout install backup
 
 RUN ln -s /usr/lib/`uname -i`-linux-gnu/libjpeg.so /usr/lib
 RUN ln -s /usr/lib/`uname -i`-linux-gnu/libfreetype.so /usr/lib
