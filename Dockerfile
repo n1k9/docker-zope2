@@ -50,5 +50,4 @@ VOLUME /zope
 ENV ZOPE_HOME /zope
 
 ENTRYPOINT ["/entry.sh"]
-#CMD ["$ZOPE_HOME/src/bin/zopectl" , "-C" , "$CONFIG_FILE" , "fg"]
 CMD ["/runzope"]

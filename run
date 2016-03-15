@@ -1,12 +1,9 @@
 #!/bin/bash
 
 INSTANCE_HOME="$ZOPE_HOME/instance"
-#ZOPEBIN="/src/Zope/bin"
-#PYTHON="$ZOPEBIN/zopepy"
 
 CONFIG_FILE="$INSTANCE_HOME/etc/zope.conf"
 export INSTANCE_HOME
-#export PYTHON
 
 if [ ! -d "$INSTANCE_HOME/etc" ]; then
   sudo -u zope -g zope mkzopeinstance -u zope:2epoz -d $INSTANCE_HOME
