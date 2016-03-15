@@ -33,15 +33,22 @@ RUN curl -sSL https://github.com/zopefoundation/Zope/archive/$ZOPEVER.tar.gz \
     && mv /src/Zope-$ZOPEVER /src/Zope
 RUN cd /src/Zope \
     && python bootstrap.py \
-    && python bin/buildout
+    && python bin/buildout \
+    && python setup.py install \
+    && rm -rf /src/
 
 RUN ln -s /usr/lib/`uname -i`-linux-gnu/libjpeg.so /usr/lib
 RUN ln -s /usr/lib/`uname -i`-linux-gnu/libfreetype.so /usr/lib
 RUN ln -s /usr/lib/`uname -i`-linux-gnu/libz.so /usr/lib
 
-COPY run /src/run
-COPY zope.conf /src/zope.conf
+COPY run /runzope
+COPY entry.sh /entry.sh
+COPY zope.conf /zope.conf
 
 EXPOSE 8080
 VOLUME /zope
-CMD /src/run
+ENV ZOPE_HOME /zope
+
+ENTRYPOINT ["/entry.sh"]
+#CMD ["$ZOPE_HOME/src/bin/zopectl" , "-C" , "$CONFIG_FILE" , "fg"]
+CMD ["/runzope"]
