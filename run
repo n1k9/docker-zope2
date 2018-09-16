@@ -1,11 +1,11 @@
 #!/bin/bash
 
-INSTANCE_HOME="$ZOPE_HOME/instance"
-Z=/src/Zope/bin
+INSTANCE_HOME="/zope/instance"
 
 if [ ! -d "$INSTANCE_HOME/etc" ]; then
-  sudo -u zope -g zope $Z/mkzopeinstance -u zope:2epoz -d $INSTANCE_HOME
+  mkdir -p $INSTANCE_HOME
+  sudo -u zope -g zope mkzopeinstance -u zope:2epoz -d $INSTANCE_HOME
   sudo -u zope -g zope cp /zope.conf $INSTANCE_HOME/etc/
 fi
 
-/zope/instance/bin/zopectl fg
+exec $INSTANCE_HOME/bin/zopectl fg
